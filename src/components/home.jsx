@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setformData, setImageData } from "../reducer/slices/formSlice";
@@ -12,17 +12,25 @@ function Home() {
     email: "",
     password: "",
     address: "",
-    file: "",
+    files: {}, // Map to track uploaded files
   });
 
-  const { name, email,file, password, address } = formData;
+
+  const { name, email, files, password, address } = formData;
+  // console.log(files)
 
   const ImageHandler = (e) => {
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) {
-        // console.log("reader.result", reader.result);
+        const newFiles = { ...files };
+        console.log(newFiles);
+        newFiles[e.target.name] = 1; // Mark the file as uploaded
         dispatch(setImageData(reader.result));
+        setFormData((prevData) => ({
+          ...prevData,
+          files: newFiles,
+        }));
       }
     };
 
@@ -38,13 +46,9 @@ function Home() {
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    // console.log(formData);
     dispatch(setformData(formData));
     navigate("/template");
   };
-
-  const state = useSelector((state) => state.form);
-  console.log(state);
 
   return (
     <div>
@@ -63,7 +67,12 @@ function Home() {
           </label>
         </div>
         <div>
-          <input type="file" name="file" onChange={ImageHandler}  />
+          <input
+            type="file"
+            name="file1"
+            onChange={ImageHandler}
+            disabled={files["file1"] === 1} // Disable if already uploaded
+          />
         </div>
         <div>
           <label htmlFor="">
@@ -79,7 +88,12 @@ function Home() {
           </label>
         </div>
         <div>
-          <input type="file" name="file" onChange={ImageHandler}  />
+          <input
+            type="file"
+            name="file2"
+            onChange={ImageHandler}
+            disabled={files["file2"] === 1} // Disable if already uploaded
+          />
         </div>
         <div>
           <label htmlFor="">

@@ -10,8 +10,8 @@ function Template() {
 
   const data = formData[0];
   const imgUrl = ImageData;
-  console.log(data);
-  console.log(ImageData);
+  // console.log(data);
+  console.log(imgUrl);
 
   const HandleonClick = () => {
     window.print();
